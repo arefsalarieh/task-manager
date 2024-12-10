@@ -19,7 +19,8 @@ import { columns } from "./data";
 import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
 import DeleteModal from "./DeleteModal";
 import AddModal from "./AddModal";
-import { useTasks } from "./hooks/useTasks";
+import { useDeleteTasks, useTasks } from "./hooks/useTasks";
+import { useQueryClient } from "@tanstack/react-query";
 //import { useVideos } from "./hooks/useVideos";
 
 function Content() {
@@ -39,7 +40,8 @@ function Content() {
 
   // query:
   const { tasks, isLoading, isError } = useTasks();
-console.log("tasks",tasks)
+  const { mutate } = useDeleteTasks();
+  const queryClient = useQueryClient();
 
   const classNames = useMemo(
     () => ({
@@ -62,7 +64,13 @@ console.log("tasks",tasks)
 
   const renderCell = (user, columnKey) => {
     const cellValue = user[columnKey];
-
+    const handleDelete = (id) => {
+      // onOpenChangeDelete();
+      mutate(id, {
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+        onError: (error) => console.log(error),
+      });
+    };
     switch (columnKey) {
       case "actions":
         return (
@@ -76,16 +84,19 @@ console.log("tasks",tasks)
               <DropdownMenu className="font-[IRANSans]" dir="rtl">
                 <DropdownItem>اطلاعات بیشتر</DropdownItem>
                 <DropdownItem onPress={onOpenAdd}>ویرایش</DropdownItem>
-                <DropdownItem onPress={onOpenDelete} color="danger">
+                <DropdownItem
+                  onPress={() => handleDelete(user.id)}
+                  color="danger"
+                >
                   حذف کردن
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
         );
-        case "isMain":
-          return cellValue===true? "فعال":"غیر فعال"
-          
+      case "isMain":
+        return cellValue === true ? "فعال" : "غیر فعال";
+
       default:
         return cellValue;
     }
