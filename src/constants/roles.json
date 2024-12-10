@@ -1,0 +1,6 @@
+[
+  { "name": "رئیس", "priority": 1 },
+  { "name": "معاون", "priority": 2 },
+  { "name": "دبیر", "priority": 3 },
+  { "name": "عضو", "priority": 4 }
+]
