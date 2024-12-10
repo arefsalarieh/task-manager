@@ -27,7 +27,7 @@ function FrontCircle() {
 
   return (
     <motion.svg
-      className="absolute left-0 right-0 top-0 bottom-0 m-auto"
+      className="absolute left-0 right-0 top-0 bottom-0 m-auto z-50"
       id="fornt-circle-svg"
       width="441"
       height="452"
