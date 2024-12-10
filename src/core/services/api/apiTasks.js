@@ -10,3 +10,13 @@ export async function getTasks() {
 
   return tasks;
 }
+export async function deleteTasks(itemId){
+  
+  const { error } = await supabase
+  .from('tasks')
+  .delete()
+  .eq('id', itemId)
+  console.log(itemId.toString())
+}
+
+
