@@ -1,12 +1,11 @@
-import React from 'react'
-
+import BackImage from "../components/landing/back-image";
 
 const Landing = () => {
-
- 
   return (
-    <div>Landing</div>
-  )
-}
+    <div className="flex justify-center items-center">
+      <BackImage />
+    </div>
+  );
+};
 
-export default Landing
+export default Landing;

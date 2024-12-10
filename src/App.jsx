@@ -4,34 +4,34 @@ import Archive from "./pages/Archive";
 import AddCard from "./pages/AddCard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-
-
-
-
 function App() {
-  const client = new QueryClient({defaultOptions: {queries: {refetchOnWindowFocus: false, staleTime: 1000*6*5}, mutations:{}}})
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: { refetchOnWindowFocus: false, staleTime: 1000 * 6 * 5 },
+      mutations: {},
+    },
+  });
 
   const router = createBrowserRouter([
     {
-      path:'',
-      element:<Landing/>
+      path: "/",
+      element: <Landing />,
     },
     {
-      path:'/Archive',
-      element:<Archive/>
+      path: "/Archive",
+      element: <Archive />,
     },
     {
-      path:'/AddCard',
-      element:<AddCard/>
+      path: "/AddCard",
+      element: <AddCard />,
     },
-    
-  ])
+  ]);
 
   return (
     <QueryClientProvider client={client}>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </QueryClientProvider>
-  )
+  );
 }
 
 export default App;
