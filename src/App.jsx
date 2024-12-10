@@ -3,6 +3,9 @@ import Landing from "./pages/Landing";
 import Archive from "./pages/Archive";
 import AddCard from "./pages/AddCard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { AdminPage } from "./pages/AdminPage";
 
 function App() {
@@ -33,9 +36,13 @@ function App() {
   ]);
 
   return (
-    <QueryClientProvider client={client}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <>
+      <ToastContainer />
+
+      <QueryClientProvider client={client}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </>
   );
 }
 
