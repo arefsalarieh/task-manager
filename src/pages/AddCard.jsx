@@ -12,7 +12,7 @@ import {
 import * as Yup from "yup";
 import rolesData from "../core/constants/role.json";
 import { toast } from "react-toastify";
-import { useCreateTask } from "../core/services/CreatTask";
+import { useCreateTask } from "../core/services/api/CreatTask";
 
 const AddCard = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
