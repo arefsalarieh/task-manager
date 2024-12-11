@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import { useTasks } from "../admin/hooks/useTasks";
+import {Spinner} from "@nextui-org/react";
 
 /* eslint-disable react/prop-types */
 function TaskContainer({ direction, className }) {
@@ -36,9 +37,10 @@ function TaskContainer({ direction, className }) {
 
 
 
-  return (
-    <div className="relative  top-12 left-20 w-[441px] h-[452px] rounded-full border-2 border-transparent  ">
 
+  return (
+    <div className="relative  top-12 left-20 w-[441px] h-[452px]  border-2 border-transparent  ">
+      {isLoading &&   <Spinner size="lg" style={{scale:'4'}} className="absolute left-[200px] top-[210px] z-50" />}
       {tasks?.map((item,index)=>{
         if(index %2 === 0 && index<10){
           return(
