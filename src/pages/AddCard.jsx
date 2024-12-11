@@ -23,7 +23,7 @@ const AddCard = ({ isOpen, onOpenChange }) => {
     initialValues: {
       role: "",
       section: "",
-      isMain: true,
+      isMain: "",
       title: "",
       describe: "",
       createDate: new Date(),
@@ -33,6 +33,7 @@ const AddCard = ({ isOpen, onOpenChange }) => {
       section: Yup.string().required("فیلد بخش الزامی است."),
       title: Yup.string().required("فیلد عنوان الزامی است."),
       describe: Yup.string().required("فیلد توضیحات الزامی است."),
+      isMain: Yup.string().required("فیلد نوع الزامی است."),
     }),
     onSubmit: (values) => {
       console.log("Submitted values:", values);
@@ -40,6 +41,7 @@ const AddCard = ({ isOpen, onOpenChange }) => {
         onSettled: () => {
           onOpenChange(false);
           formik.resetForm();
+          QueryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
       });
     },
@@ -79,7 +81,7 @@ const AddCard = ({ isOpen, onOpenChange }) => {
                     value={formik.values.role}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="border rounded p-2 text-sm text-white"
+                    className="border rounded p-2 text-sm text-white bg-gray-800 border-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   >
                     <option value="" disabled>
                       نقش را انتخاب کنید
@@ -100,7 +102,7 @@ const AddCard = ({ isOpen, onOpenChange }) => {
                 <Input
                   name="section"
                   className="text-white"
-                  label="بخش"
+                  // label="بخش"
                   placeholder="بخش را وارد کنید"
                   value={formik.values.section}
                   onChange={formik.handleChange}
@@ -122,16 +124,24 @@ const AddCard = ({ isOpen, onOpenChange }) => {
                     name="isMain"
                     value={formik.values.isMain}
                     onChange={formik.handleChange}
-                    className="border rounded p-2 text-sm text-white"
+                    className="border rounded p-2 text-sm text-white bg-gray-800 border-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   >
+                    <option value="" disabled>
+                      اهمیت را انتخاب کنید
+                    </option>
                     <option value="true">اصلی</option>
                     <option value="false">فرعی</option>
                   </select>
+                  {formik.touched.isMain && formik.errors.isMain && (
+                    <div className="text-red-500 text-sm mt-1">
+                      {formik.errors.isMain}
+                    </div>
+                  )}
                 </div>
 
                 <Input
                   name="title"
-                  label="عنوان"
+                  // label="عنوان"
                   placeholder="عنوان را وارد کنید"
                   value={formik.values.title}
                   onChange={formik.handleChange}
@@ -147,7 +157,7 @@ const AddCard = ({ isOpen, onOpenChange }) => {
 
                 <Input
                   name="describe"
-                  label="توضیحات"
+                  // label="توضیحات"
                   placeholder="توضیحات را وارد کنید"
                   value={formik.values.describe}
                   onChange={formik.handleChange}
