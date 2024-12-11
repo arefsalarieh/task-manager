@@ -4,7 +4,7 @@ import { Button, Input, useDisclosure } from "@nextui-org/react";
 // icons
 import { PlusIcon } from "./icons/PlusIcon";
 import { SearchIcon } from "./icons/SearchIcon";
-import AddModal from "./AddModal";
+// import AddModal from "./AddModal";
 import AddCard from "../../pages/AddCard";
 
 function Header() {
