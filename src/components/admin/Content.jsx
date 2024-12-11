@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import {
   Button,
   Dropdown,
@@ -13,18 +14,16 @@ import {
   TableRow,
   useDisclosure,
 } from "@nextui-org/react";
-
-import { useMemo, useState } from "react";
-import { columns } from "./data";
 import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
 import DeleteModal from "./DeleteModal";
-import AddModal from "./AddModal";
+import EditModal from "./EditModal";
 import { useDeleteTasks, useTasks } from "./hooks/useTasks";
 import { useQueryClient } from "@tanstack/react-query";
-//import { useVideos } from "./hooks/useVideos";
+import { columns } from "./data";
 
 function Content() {
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
+  const [selectedTask, setSelectedTask] = useState(null); // State for selected task
 
   // modals
   const {
@@ -42,19 +41,14 @@ function Content() {
   const { tasks, isLoading, isError } = useTasks();
   const { mutate } = useDeleteTasks();
   const queryClient = useQueryClient();
-
   const classNames = useMemo(
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
-        // changing the rows border radius
-        // first
         "group-data-[first=true]:first:before:rounded-none",
         "group-data-[first=true]:last:before:rounded-none",
-        // middle
         "group-data-[middle=true]:before:rounded-none",
-        // last
         "group-data-[last=true]:first:before:rounded-none",
         "group-data-[last=true]:last:before:rounded-none",
       ],
@@ -65,16 +59,16 @@ function Content() {
   const renderCell = (user, columnKey) => {
     const cellValue = user[columnKey];
     const handleDelete = (id) => {
-      // onOpenChangeDelete();
       mutate(id, {
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
         onError: (error) => console.log(error),
       });
     };
+
     switch (columnKey) {
       case "actions":
         return (
-          <div className="relative flex justify-end items-center gap-2 ">
+          <div className="relative flex justify-end items-center gap-2">
             <Dropdown className="bg-background border-1 border-default-200 dark text-white">
               <DropdownTrigger>
                 <Button isIconOnly radius="full" size="sm" variant="light">
@@ -83,7 +77,14 @@ function Content() {
               </DropdownTrigger>
               <DropdownMenu className="font-[IRANSans]" dir="rtl">
                 <DropdownItem>اطلاعات بیشتر</DropdownItem>
-                <DropdownItem onPress={onOpenAdd}>ویرایش</DropdownItem>
+                <DropdownItem
+                  onPress={() => {
+                    setSelectedTask(user); // Set the task data
+                    onOpenAdd(); // Open the edit modal
+                  }}
+                >
+                  ویرایش
+                </DropdownItem>
                 <DropdownItem
                   onPress={() => handleDelete(user.id)}
                   color="danger"
@@ -161,7 +162,11 @@ function Content() {
 
       {/* modals: */}
       <DeleteModal isOpen={isOpenDelete} onOpenChange={onOpenChangeDelete} />
-      <AddModal isOpen={isOpenAdd} onOpenChange={onOpenChangeAdd} />
+      <EditModal
+        isOpen={isOpenAdd}
+        onOpenChange={onOpenChangeAdd}
+        task={selectedTask} 
+      />
     </>
   );
 }
