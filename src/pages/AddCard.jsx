@@ -40,6 +40,7 @@ const AddCard = ({ isOpen, onOpenChange }) => {
         onSettled: () => {
           onOpenChange(false);
           formik.resetForm();
+          QueryClient.invalidateQueries(["tasks"], { refetchActive: true });
         },
       });
     },
