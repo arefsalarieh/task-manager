@@ -1,8 +1,13 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import supabase from "./supabase";
 
-async function createTasks(values) {
+function InvalidHandler() {
+  const QueryClient = useQueryClient();
+  QueryClient.invalidateQueries(["tasks"]);
+}
+
+async function CreateTasks(values) {
   let { data, error } = await supabase.from("tasks").insert([values]);
 
   if (error) {
@@ -12,15 +17,16 @@ async function createTasks(values) {
     throw new Error("به مشکل خوردیم");
   } else {
     toast.success("با موفقیت اضافه شد");
+    InvalidHandler();
   }
 
-  return tasks;
+  return data;
 }
 
 export const useCreateTask = () => {
   return useMutation({
     mutationFn: (values) => {
-      return createTasks(values);
+      return CreateTasks(values);
     },
   });
 };

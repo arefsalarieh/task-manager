@@ -16,7 +16,7 @@ import {
 import pictures from "../core/constants/pictures.json";
 
 import AddCard from "./AddCard";
-
+import { Link } from "react-router-dom";
 
 const Landing = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -35,9 +35,16 @@ const Landing = () => {
         <FrontCircle />
         <TaskContainer direction="left" />
       </div>
-      <Button onClick={onOpen} className="absolute top-2 left-2 bg-white">
-        گالری عکس ها
-      </Button>
+      <div className="absolute top-2 right-2 flex justify-center gap-5">
+        <Button onClick={onOpen} className="bg-white">
+          گالری عکس ها
+        </Button>
+
+        <Link to={"/admin"}>
+          <Button className="bg-white">پنل ادمین</Button>
+        </Link>
+      </div>
+
       <Modal size="3xl" isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
