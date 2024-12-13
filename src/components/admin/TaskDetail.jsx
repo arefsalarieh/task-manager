@@ -24,26 +24,30 @@ const TaskDetail = ({ isOpen, onOpenChange, detail }) => {
                 جزئیات وظایف
               </ModalHeader>
               <ModalBody>
-                <div>
+                <div className="flex flex-col gap-3">
                   <div>
-                    <span className="font-bold text-lg">عنوان: </span>
+                    <span className="font-bold ">عنوان: </span>
                     <span>{detail?.title}</span>
                   </div>
                   <div>
-                    <span className="font-bold text-lg">توضیحات کوتاه: </span>
+                    <span className="font-bold ">توضیحات کوتاه: </span>
                     <span>{detail?.describe}</span>
                   </div>
                   <div>
-                    <span className="font-bold text-lg">نقش: </span>
+                    <span className="font-bold ">نقش: </span>
                     <span>{detail?.role}</span>
                   </div>
                   <div>
-                    <span className="font-bold text-lg">نهاد: </span>
+                    <span className="font-bold ">نهاد: </span>
                     <span>{detail?.section}</span>
                   </div>
                   <div>
-                    <span className="font-bold text-lg">اصلی/فرعی بودن: </span>
+                    <span className="font-bold ">اصلی/فرعی بودن: </span>
                     <span>{detail?.isMain ? "اصلی" : "فرعی"}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold "> توضیحات اصلی:  </span>
+                    <span>{detail?.mainDescribe}</span>
                   </div>
                 </div>
               </ModalBody>
