@@ -4,7 +4,8 @@ import { Button, Input, useDisclosure } from "@nextui-org/react";
 // icons
 import { PlusIcon } from "./icons/PlusIcon";
 import { SearchIcon } from "./icons/SearchIcon";
-import AddModal from "./AddModal";
+// import AddModal from "./AddModal";
+import AddCard from "../../pages/AddCard";
 
 function Header() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -15,7 +16,7 @@ function Header() {
         <Input
           isClearable
           classNames={{
-            base: "w-full sm:max-w-[44%] font-[IRANSans]",
+            base: "w-full sm:max-w-[44%] font-[IRANSans] ",
             inputWrapper: "border-1",
           }}
           placeholder="سرچ کنید ....."
@@ -35,7 +36,12 @@ function Header() {
           >
             اضافه کردن
           </Button>
-          <AddModal isOpen={isOpen} onOpenChange={onOpenChange} />
+          <AddCard
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onOpenChange={onOpenChange}
+          />
+          {/* <AddModal isOpen={isOpen} onOpenChange={onOpenChange} /> */}
         </div>
       </div>
       <div className="flex justify-between items-center">

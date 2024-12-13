@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useFormik } from "formik";
 import {
   Modal,
@@ -7,22 +8,22 @@ import {
   ModalFooter,
   Button,
   Input,
-  useDisclosure,
 } from "@nextui-org/react";
 import * as Yup from "yup";
 import rolesData from "../core/constants/role.json";
-import { toast } from "react-toastify";
 import { useCreateTask } from "../core/services/api/CreatTask";
+import { useQueryClient } from "@tanstack/react-query";
 
-const AddCard = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+const AddCard = ({ isOpen, onOpenChange }) => {
+  /* const { isOpen, onOpen, onOpenChange } = useDisclosure(); */
   const addCard2 = useCreateTask();
+  const QueryClient = useQueryClient();
 
   const formik = useFormik({
     initialValues: {
       role: "",
       section: "",
-      isMain: true,
+      isMain: "",
       title: "",
       describe: "",
       createDate: new Date(),
@@ -32,6 +33,7 @@ const AddCard = () => {
       section: Yup.string().required("فیلد بخش الزامی است."),
       title: Yup.string().required("فیلد عنوان الزامی است."),
       describe: Yup.string().required("فیلد توضیحات الزامی است."),
+      isMain: Yup.string().required("فیلد نوع الزامی است."),
     }),
     onSubmit: (values) => {
       console.log("Submitted values:", values);
@@ -39,6 +41,7 @@ const AddCard = () => {
         onSettled: () => {
           onOpenChange(false);
           formik.resetForm();
+          QueryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
       });
     },
@@ -46,15 +49,16 @@ const AddCard = () => {
 
   return (
     <>
-      <Button
+      {/* <Button
         color="danger"
         className="absolute top-[10%] right-[10%]"
         onPress={onOpen}
       >
         اضافه کردن
-      </Button>
+      </Button> */}
       <Modal
         isOpen={isOpen}
+        className="dark"
         placement="top-center"
         onOpenChange={onOpenChange}
         // css={{ direction: "rtl" }}
@@ -63,7 +67,7 @@ const AddCard = () => {
         <ModalContent>
           {(onClose) => (
             <form onSubmit={formik.handleSubmit}>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 text-white">
                 اضافه کردن کارت جدید
               </ModalHeader>
               <ModalBody>
@@ -77,7 +81,7 @@ const AddCard = () => {
                     value={formik.values.role}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="border rounded p-2 text-sm"
+                    className="border rounded p-2 text-sm text-white bg-gray-800 border-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   >
                     <option value="" disabled>
                       نقش را انتخاب کنید
@@ -97,7 +101,8 @@ const AddCard = () => {
 
                 <Input
                   name="section"
-                  label="بخش"
+                  className="text-white"
+                  // label="بخش"
                   placeholder="بخش را وارد کنید"
                   value={formik.values.section}
                   onChange={formik.handleChange}
@@ -119,21 +124,30 @@ const AddCard = () => {
                     name="isMain"
                     value={formik.values.isMain}
                     onChange={formik.handleChange}
-                    className="border rounded p-2 text-sm"
+                    className="border rounded p-2 text-sm text-white bg-gray-800 border-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   >
+                    <option value="" disabled>
+                      اهمیت را انتخاب کنید
+                    </option>
                     <option value="true">اصلی</option>
                     <option value="false">فرعی</option>
                   </select>
+                  {formik.touched.isMain && formik.errors.isMain && (
+                    <div className="text-red-500 text-sm mt-1">
+                      {formik.errors.isMain}
+                    </div>
+                  )}
                 </div>
 
                 <Input
                   name="title"
-                  label="عنوان"
+                  // label="عنوان"
                   placeholder="عنوان را وارد کنید"
                   value={formik.values.title}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   variant="bordered"
+                  className="text-white"
                 />
                 {formik.touched.title && formik.errors.title && (
                   <div className="text-red-500 text-sm mt-1">
@@ -143,12 +157,13 @@ const AddCard = () => {
 
                 <Input
                   name="describe"
-                  label="توضیحات"
+                  // label="توضیحات"
                   placeholder="توضیحات را وارد کنید"
                   value={formik.values.describe}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   variant="bordered"
+                  className="text-white"
                 />
                 {formik.touched.describe && formik.errors.describe && (
                   <div className="text-red-500 text-sm mt-1">

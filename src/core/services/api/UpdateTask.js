@@ -2,10 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import supabase from "./supabase";
 
-
-
-async function CreateTasks(values) {
-  let { data, error } = await supabase.from("tasks").insert([values]);
+async function UpdateTasks(values) {
+  let { data, error } = await supabase
+    .from("tasks")
+    .update([values])
+    .eq("id", values.id);
 
   if (error) {
     console.error(error);
@@ -13,16 +14,16 @@ async function CreateTasks(values) {
     toast.error("عملیات با خطا مواجه شد");
     throw new Error("به مشکل خوردیم");
   } else {
-    toast.success("با موفقیت اضافه شد");
+    toast.success("با موفقیت ویرایش شد");
   }
 
   return data;
 }
 
-export const useCreateTask = () => {
+export const useUpdateTasks = () => {
   return useMutation({
     mutationFn: (values) => {
-      return CreateTasks(values);
+      return UpdateTasks(values);
     },
   });
 };

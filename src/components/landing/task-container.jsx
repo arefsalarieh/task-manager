@@ -1,21 +1,112 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { motion } from 'framer-motion';
+import { useTasks } from "../admin/hooks/useTasks";
+import {Spinner} from "@nextui-org/react";
 
 /* eslint-disable react/prop-types */
 function TaskContainer({ direction, className }) {
   const [List, setList] = useState([1, 2, 3, 4, 5]);
+  const [LeftList, setLeftList] = useState([]);
+  const [RightList, setRightList] = useState([]);
+
+  const { tasks, isLoading, isError } = useTasks();
+  tasks && console.log(tasks);
+
+  useEffect(() => {
+    let leftArr = []
+    let rightArr = []
+
+    for (let i = 0; i < tasks?.length; i++) {
+      if(i%2 === 0){
+        setLeftList([...LeftList , tasks[i]])
+      }
+      
+    }
+    // tasks?.forEach((item,index)=>{
+    //   if(index%2 === 0){ 
+    //     leftArr.push(item)
+    //   }else{
+    //     rightArr.push(item)
+    //   }
+
+    //   setLeftList(leftArr)
+    //   setRightList(rightArr)
+      
+    // })
+  }, []);
+
+
+
 
   return (
-    <div className="relative  top-12 left-20 w-[441px] h-[452px] rounded-full border-2 border-transparent  ">
+    <div className="relative  top-12 left-20 w-[441px] h-[452px]  border-2 border-transparent  ">
+      {isLoading &&   <Spinner size="lg" style={{scale:'4'}} className="absolute left-[200px] top-[210px] z-50" />}
+      {tasks?.map((item,index)=>{
+        if(index %2 === 0 && index<10){
+          return(
+            <motion.div
+            style={{ transformOrigin: "125px 273px", rotate: `${((index/2)+1)*(-30) }deg` , translate:'-113px' }}
+            className="absolute left-[100px] -top-[56px] z-50"
+            initial={{  width: 0  }}
+            whileInView={{  width:'250px' }}
+            transition={{delay:Math.random()}}  
+          >
+            <div
+              style={{ rotate: `${((index/2)+1)*30 }deg`  }}
+              className={` h-[65px] bg-white rounded-[8px] flex overflow-hidden items-center flex-row-reverse ${
+                direction === "left" ? "" : "flex-row-reverse"
+              } ${className}`}
+            >
+              <div className="w-[30px] h-full bg-[#F42495] text-white flex justify-center items-center">
+                <p className="transform rotate-[-90deg]">یکشنبه</p>
+              </div>
+              <h2 className="text-black text-center w-[140px]">
+                متن توضیحات متن توضیحات تسک
+              </h2>
+            </div>
+          </motion.div>
+          )
+        }
+        else if(index %2 === 1 && index<10){
+          return(
+            <motion.div
+            style={{ transformOrigin: "125px 273px", rotate: `${Math.floor((index/2)+1)*30 }deg` , translate:'100px' }}
+            className="absolute left-[100px] -top-[56px] z-50"
+            initial={{  width: 0  }}
+            whileInView={{  width:'250px' }}
+            transition={{delay:Math.random()}}   
+          >
+            <div
+              style={{ rotate: `${-Math.floor((index/2)+1)*30 }deg`  }}
+              className={` h-[65px] bg-white rounded-[8px] flex overflow-hidden items-center ${
+                direction === "left" ? "" : "flex-row-reverse"
+              } ${className}`}
+            >
+              <div className="w-[30px] h-full bg-[#F42495] text-white flex justify-center items-center">
+                <p className="transform rotate-[-90deg]">یکشنبه</p>
+              </div>
+              <h2 className="text-black text-center w-[140px]">
+                متن توضیحات متن توضیحات تسک
+              </h2>
+            </div>
+          </motion.div>
+          )
+        }
+ 
+      })}
 
-      {List.map(item=>{
+      {/* {LeftList?.map((item , index)=>{
         return(
-          <div
-          style={{ transformOrigin: "125px 273px", rotate: `${-item*30 }deg` , translate:'-113px' }}
+          <motion.div
+          style={{ transformOrigin: "125px 273px", rotate: `${-(index+1)*30 }deg` , translate:'-113px' }}
           className="absolute left-[100px] -top-[56px] z-50"
+          initial={{  width: 0  }}
+          whileInView={{  width:'250px' }}
+          transition={{delay:Math.random()}}  
         >
           <div
-            style={{ rotate: `${item*30 }deg`  }}
-            className={`w-[250px] h-[65px] bg-white rounded-[8px] flex overflow-hidden items-center flex-row-reverse ${
+            style={{ rotate: `${(index+1)*30 }deg`  }}
+            className={` h-[65px] bg-white rounded-[8px] flex overflow-hidden items-center flex-row-reverse ${
               direction === "left" ? "" : "flex-row-reverse"
             } ${className}`}
           >
@@ -26,20 +117,23 @@ function TaskContainer({ direction, className }) {
               متن توضیحات متن توضیحات تسک
             </h2>
           </div>
-        </div>
+        </motion.div>
         )
       })}
 
 
-      {List.map(item=>{
+      {RightList?.map(item=>{
         return(
-          <div
+          <motion.div
           style={{ transformOrigin: "125px 273px", rotate: `${item*30 }deg` , translate:'100px' }}
           className="absolute left-[100px] -top-[56px] z-50"
+          initial={{  width: 0  }}
+          whileInView={{  width:'250px' }}
+          transition={{delay:Math.random()}}   
         >
           <div
             style={{ rotate: `${-item*30 }deg`  }}
-            className={`w-[250px] h-[65px] bg-white rounded-[8px] flex overflow-hidden items-center ${
+            className={` h-[65px] bg-white rounded-[8px] flex overflow-hidden items-center ${
               direction === "left" ? "" : "flex-row-reverse"
             } ${className}`}
           >
@@ -50,64 +144,17 @@ function TaskContainer({ direction, className }) {
               متن توضیحات متن توضیحات تسک
             </h2>
           </div>
-        </div>
+        </motion.div>
         )
-      })}
+      })} */}
+
+
+
     </div>
   )
 
 
-  // return (
-  //   <motion.div
-  //     className={`w-[250px] h-[65px] relative z-40 bg-white rounded-[8px] flex overflow-hidden items-center ${
-  //       direction === "left" ? "origin-right" : "flex-row-reverse origin-left"
-  //     } ${className}`}
-  //     initial={{ rotate: -90, opacity: 0 }}
-  //     animate={{
-  //       rotate: direction === "left" ? [-90, 0, 5, -2, 0] : [90, 0, 5, -2, 0],
-  //       opacity: [0, 1],
-  //     }}
-  //     transition={{
-  //       rotate: {
-  //         duration: 2,
-  //         ease: "easeInOut",
-  //         delay: ContainerDelay,
-  //       },
-  //       opacity: {
-  //         duration: 2,
-  //         ease: "easeInOut",
-  //         delay: ContainerDelay,
-  //       },
-  //     }}
-  //   >
-  //     <motion.div
-  //       className="w-[30px] h-full bg-[#F42495] text-white flex justify-center items-center"
-  //       initial={{ opacity: 0, x: direction === "left" ? -100 : 100 }}
-  //       animate={{ opacity: 1, x: 0 }}
-  //       transition={{
-  //         type: "spring",
-  //         stiffness: 50,
-  //         damping: 25,
-  //         delay: DateDelay,
-  //       }}
-  //     >
-  //       <p className="transform rotate-[-90deg]">یکشنبه</p>
-  //     </motion.div>
-  //     <motion.h2
-  //       className="text-black text-center w-[140px]"
-  //       initial={{ opacity: 0, x: direction === "left" ? -100 : 100 }}
-  //       animate={{ opacity: 1, x: 0 }}
-  //       transition={{
-  //         type: "spring",
-  //         stiffness: 50,
-  //         damping: 25,
-  //         delay: TitleDelay,
-  //       }}
-  //     >
-  //       متن توضیحات متن توضیحات تسک
-  //     </motion.h2>
-  //   </motion.div>
-  // );
+
 }
 
 export default TaskContainer;
