@@ -21,12 +21,11 @@ import { useDeleteTasks, useTasks } from "./hooks/useTasks";
 import { useQueryClient } from "@tanstack/react-query";
 import { columns } from "./data";
 import TaskDetail from "./taskDetail";
-//import { useVideos } from "./hooks/useVideos";
 
 function Content() {
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
   const [detail, setDetail] = useState({});
-  const [selectedTask, setSelectedTask] = useState(null); // State for selected task
+  const [selectedTask, setSelectedTask] = useState(null);
 
   // modals
   const {
@@ -77,9 +76,7 @@ function Content() {
       onOpenDetail();
       const detail = tasks.filter((item) => item.id === id);
       setDetail(detail[0]);
-
     };
-
 
     switch (columnKey) {
       case "actions":
@@ -92,12 +89,9 @@ function Content() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu className="font-[IRANSans]" dir="rtl">
-
                 <DropdownItem onPress={() => handleTaskDetail(user.id)}>
                   اطلاعات بیشتر
                 </DropdownItem>
- 
-
 
                 <DropdownItem
                   onPress={() => {
@@ -185,17 +179,15 @@ function Content() {
       {/* modals: */}
       <DeleteModal isOpen={isOpenDelete} onOpenChange={onOpenChangeDelete} />
 
-      <AddModal isOpen={isOpenAdd} onOpenChange={onOpenChangeAdd} />
       <TaskDetail
         isOpen={isOpenDetail}
         onOpenChange={onOpenChangeDetail}
         detail={detail}
-
+      />
       <EditModal
         isOpen={isOpenAdd}
         onOpenChange={onOpenChangeAdd}
-        task={selectedTask} 
-
+        task={selectedTask}
       />
     </>
   );
