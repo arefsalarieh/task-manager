@@ -42,7 +42,7 @@ function TaskContainer({ direction, className }) {
     <div className="relative  top-12 left-20 w-[441px] h-[452px]  border-2 border-transparent  ">
       {isLoading &&   <Spinner size="lg" style={{scale:'4'}} className="absolute left-[200px] top-[210px] z-50" />}
       {tasks?.map((item,index)=>{
-        if(index %2 === 0 && index<10){
+        if(index %2 === 0 && index<12){
           return(
             <motion.div
             style={{ transformOrigin: "125px 273px", rotate: `${((index/2)+1)*(-30) }deg` , translate:'-113px' }}
@@ -58,16 +58,16 @@ function TaskContainer({ direction, className }) {
               } ${className}`}
             >
               <div className="w-[30px] h-full bg-[#F42495] text-white flex justify-center items-center">
-                <p className="transform rotate-[-90deg]">یکشنبه</p>
+                <p className="transform rotate-[-90deg]">{item.role}</p>
               </div>
-              <h2 className="text-black text-center w-[140px]">
-                متن توضیحات متن توضیحات تسک
+              <h2 className="text-black text-center text-lg truncate w-[140px]">
+                {item.title}
               </h2>
             </div>
           </motion.div>
           )
         }
-        else if(index %2 === 1 && index<10){
+        else if(index %2 === 1 && index<12){
           return(
             <motion.div
             style={{ transformOrigin: "125px 273px", rotate: `${Math.floor((index/2)+1)*30 }deg` , translate:'100px' }}
@@ -83,10 +83,10 @@ function TaskContainer({ direction, className }) {
               } ${className}`}
             >
               <div className="w-[30px] h-full bg-[#F42495] text-white flex justify-center items-center">
-                <p className="transform rotate-[-90deg]">یکشنبه</p>
+                <p className="transform rotate-[-90deg]">{item.role}</p>
               </div>
-              <h2 className="text-black text-center w-[140px]">
-                متن توضیحات متن توضیحات تسک
+              <h2 className="text-black text-center px-2 text-lg truncate">
+              {item.title}
               </h2>
             </div>
           </motion.div>
