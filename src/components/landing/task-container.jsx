@@ -58,10 +58,10 @@ function TaskContainer({ direction, className }) {
               } ${className}`}
             >
               <div className="w-[30px] h-full bg-[#F42495] text-white flex justify-center items-center">
-                <p className="transform rotate-[-90deg]">یکشنبه</p>
+                <p className="transform rotate-[-90deg]">{item.role}</p>
               </div>
               <h2 className="text-black text-center w-[140px]">
-                متن توضیحات متن توضیحات تسک
+                {item.title}
               </h2>
             </div>
           </motion.div>
@@ -83,10 +83,10 @@ function TaskContainer({ direction, className }) {
               } ${className}`}
             >
               <div className="w-[30px] h-full bg-[#F42495] text-white flex justify-center items-center">
-                <p className="transform rotate-[-90deg]">یکشنبه</p>
+                <p className="transform rotate-[-90deg]">{item.role}</p>
               </div>
               <h2 className="text-black text-center w-[140px]">
-                متن توضیحات متن توضیحات تسک
+              {item.title}
               </h2>
             </div>
           </motion.div>

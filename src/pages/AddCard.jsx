@@ -9,15 +9,32 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
+import { Textarea } from "@nextui-org/input";
 import * as Yup from "yup";
 import rolesData from "../core/constants/role.json";
 import { useCreateTask } from "../core/services/api/CreatTask";
 import { useQueryClient } from "@tanstack/react-query";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+import { useEffect } from "react";
 
 const AddCard = ({ isOpen, onOpenChange }) => {
   /* const { isOpen, onOpen, onOpenChange } = useDisclosure(); */
   const addCard2 = useCreateTask();
   const QueryClient = useQueryClient();
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  const startListening = () => {
+    SpeechRecognition.startListening({ continuous: true, language: "fa-IR" });
+  };
+
 
   const formik = useFormik({
     initialValues: {
@@ -34,9 +51,9 @@ const AddCard = ({ isOpen, onOpenChange }) => {
       section: Yup.string().required("فیلد بخش الزامی است."),
       title: Yup.string().required("فیلد عنوان الزامی است."),
       describe: Yup.string().required("فیلد توضیحات الزامی است."),
-      mainDescribe: Yup.string()
-        .required("فیلد توضیحات الزامی است.")
-        .min(30, "توضیحات باید حداقل 30 کاراکتر باشد."),
+      // mainDescribe: Yup.string()
+        // .required("فیلد توضیحات الزامی است.")
+        // .min(30, "توضیحات باید حداقل 30 کاراکتر باشد."),
       isMain: Yup.string().required("فیلد نوع الزامی است."),
     }),
     onSubmit: (values) => {
@@ -50,6 +67,12 @@ const AddCard = ({ isOpen, onOpenChange }) => {
       });
     },
   });
+
+  useEffect(() => {
+    formik.setFieldValue("mainDescribe", transcript);
+  }, [transcript]);
+
+
 
   return (
     <>
@@ -175,19 +198,51 @@ const AddCard = ({ isOpen, onOpenChange }) => {
                   </div>
                 )}
 
-                <textarea
+                 <Textarea
                   name="mainDescribe"
-                  placeholder="توضیحات اصلی را وارد کنید"
                   value={formik.values.mainDescribe}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="text-white rounded-lg p-2"
+                  placeholder='توضیحات تکمیلی'
                 />
-                {formik.touched.mainDescribe && formik.errors.mainDescribe && (
+                <div className="text-white flex">
+
+                  <Button color="success" variant="bordered"
+                    type="button" // اضافه کردن این نوع
+                    onClick={(e) => {
+                      e.preventDefault(); // جلوگیری از رفتار پیش‌فرض
+                      startListening();
+                    }}
+                  >
+                    Start
+                  </Button>
+                  <Button color="warning" variant="bordered" className="mx-4"
+                    type="button" // اضافه کردن این نوع
+                    onClick={(e) => {
+                      e.preventDefault(); // جلوگیری از رفتار پیش‌فرض
+                      SpeechRecognition.stopListening();
+                    }}
+                  >
+                    Stop
+                  </Button>
+                  <Button color="default" variant="bordered"
+                    onClick={(e) => {
+                      e.preventDefault(); // جلوگیری از رفتار پیش‌فرض
+                      resetTranscript();
+                    }}
+                  >
+                    Reset
+                  </Button>
+
+                  <p>میکروفون: {listening ? "روشن" : "خاموش"}</p>
+
+                  
+                </div>
+                
+                {/* {formik.touched.mainDescribe && formik.errors.mainDescribe && (
                   <div className="text-red-500 text-sm mt-1">
                     {formik.errors.mainDescribe}
                   </div>
-                )}
+                )} */}
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onPress={onClose}>
