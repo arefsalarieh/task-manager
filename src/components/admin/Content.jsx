@@ -50,7 +50,7 @@ function Content() {
   const queryClient = useQueryClient();
   const classNames = useMemo(
     () => ({
-      wrapper: ["", "max-w-3xl"],
+      wrapper: ["max-h-[382px]", "max-w-3xl"],
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
         "group-data-[first=true]:first:before:rounded-none",

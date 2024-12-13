@@ -6,7 +6,7 @@ function AdminPage() {
   return (
     <div
       dir="rtl"
-      className="dark text-foreground bg-background w-screen  p-8 flex flex-col"
+      className="dark text-foreground bg-background w-screen h-fit min-h-screen p-8 flex flex-col"
     >
       <Header />
       <Content />
