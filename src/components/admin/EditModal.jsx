@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useFormik } from "formik";
 import {
   Button,
@@ -24,6 +25,7 @@ function EditModal({ isOpen, onOpenChange, task }) {
     isMain: "",
     title: "",
     describe: "",
+    mainDescribe: "",
     createDate: new Date(),
   });
   useEffect(() => {
@@ -35,10 +37,12 @@ function EditModal({ isOpen, onOpenChange, task }) {
         isMain: task.isMain ?? true,
         title: task?.title ?? "",
         describe: task?.describe ?? "",
+        mainDescribe: task?.mainDescribe ?? "",
         createDate: task.createDate ?? new Date(),
       });
     }
   }, [task]);
+
   const formik = useFormik({
     initialValues,
     enableReinitialize: true,
@@ -47,11 +51,13 @@ function EditModal({ isOpen, onOpenChange, task }) {
       section: Yup.string().required("فیلد بخش الزامی است."),
       title: Yup.string().required("فیلد عنوان الزامی است."),
       describe: Yup.string().required("فیلد توضیحات الزامی است."),
+      mainDescribe: Yup.string()
+        .required("فیلد توضیحات الزامی است.")
+        .min(30, "توضیحات باید حداقل 30 کاراکتر باشد."),
       isMain: Yup.string().required("فیلد نوع الزامی است."),
     }),
-   
-    onSubmit: (values) => {
 
+    onSubmit: (values) => {
       updateTask.mutate(values, {
         // onSuccess: () => {
         //   toast.success("تسک با موفقیت به‌روزرسانی شد.");
@@ -216,6 +222,20 @@ function EditModal({ isOpen, onOpenChange, task }) {
                   </div>
                 )}
               </div>
+
+              <textarea
+                name="mainDescribe"
+                placeholder="توضیحات اصلی را وارد کنید"
+                value={formik.values.mainDescribe}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="text-white rounded-lg p-2"
+              />
+              {formik.touched.mainDescribe && formik.errors.mainDescribe && (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.mainDescribe}
+                </div>
+              )}
             </ModalBody>
             <ModalFooter>
               <Button color="danger" variant="flat" onPress={onClose}>

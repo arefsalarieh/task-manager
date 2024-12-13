@@ -1,8 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import supabase from "./supabase";
-
-
 
 async function CreateTasks(values) {
   let { data, error } = await supabase.from("tasks").insert([values]);
