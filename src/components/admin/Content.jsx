@@ -26,7 +26,7 @@ function Content() {
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
   const [detail, setDetail] = useState({});
   const [selectedTask, setSelectedTask] = useState(null);
-
+ 
   // modals
   const {
     isOpen: isOpenDelete,

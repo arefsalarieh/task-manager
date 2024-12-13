@@ -5,7 +5,7 @@ const columns = [
   { name: "نقش", uid: "role" },
   { name: "اصلی/فرعی بودن", uid: "isMain" },
   { name: "نهاد", uid: "section" },
-  { name: "توضیحات اصلی", uid: "mainDescribe" },
+  // { name: "توضیحات اصلی", uid: "mainDescribe" },
   { name: "عملیات ها", uid: "actions" },
 ];
 
