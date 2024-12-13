@@ -20,9 +20,12 @@ import EditModal from "./EditModal";
 import { useDeleteTasks, useTasks } from "./hooks/useTasks";
 import { useQueryClient } from "@tanstack/react-query";
 import { columns } from "./data";
+import TaskDetail from "./taskDetail";
+//import { useVideos } from "./hooks/useVideos";
 
 function Content() {
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
+  const [detail, setDetail] = useState({});
   const [selectedTask, setSelectedTask] = useState(null); // State for selected task
 
   // modals
@@ -35,6 +38,11 @@ function Content() {
     isOpen: isOpenAdd,
     onOpen: onOpenAdd,
     onOpenChange: onOpenChangeAdd,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDetail,
+    onOpen: onOpenDetail,
+    onOpenChange: onOpenChangeDetail,
   } = useDisclosure();
 
   // query:
@@ -65,6 +73,14 @@ function Content() {
       });
     };
 
+    const handleTaskDetail = (id) => {
+      onOpenDetail();
+      const detail = tasks.filter((item) => item.id === id);
+      setDetail(detail[0]);
+
+    };
+
+
     switch (columnKey) {
       case "actions":
         return (
@@ -76,7 +92,13 @@ function Content() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu className="font-[IRANSans]" dir="rtl">
-                <DropdownItem>اطلاعات بیشتر</DropdownItem>
+
+                <DropdownItem onPress={() => handleTaskDetail(user.id)}>
+                  اطلاعات بیشتر
+                </DropdownItem>
+ 
+
+
                 <DropdownItem
                   onPress={() => {
                     setSelectedTask(user); // Set the task data
@@ -162,10 +184,18 @@ function Content() {
 
       {/* modals: */}
       <DeleteModal isOpen={isOpenDelete} onOpenChange={onOpenChangeDelete} />
+
+      <AddModal isOpen={isOpenAdd} onOpenChange={onOpenChangeAdd} />
+      <TaskDetail
+        isOpen={isOpenDetail}
+        onOpenChange={onOpenChangeDetail}
+        detail={detail}
+
       <EditModal
         isOpen={isOpenAdd}
         onOpenChange={onOpenChangeAdd}
         task={selectedTask} 
+
       />
     </>
   );
