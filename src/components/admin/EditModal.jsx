@@ -14,6 +14,9 @@ import rolesData from "../../core/constants/role.json";
 import { useEffect, useState } from "react";
 import { useUpdateTasks } from "../../core/services/api/UpdateTask";
 import { useQueryClient } from "@tanstack/react-query";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 function EditModal({ isOpen, onOpenChange, task }) {
   const updateTask = useUpdateTasks();
@@ -28,6 +31,18 @@ function EditModal({ isOpen, onOpenChange, task }) {
     mainDescribe: "",
     createDate: new Date(),
   });
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  const startListening = () => {
+    SpeechRecognition.startListening({ continuous: true, language: "fa-IR" });
+  };
+
   useEffect(() => {
     if (task) {
       setInitialValues({
@@ -51,9 +66,9 @@ function EditModal({ isOpen, onOpenChange, task }) {
       section: Yup.string().required("فیلد بخش الزامی است."),
       title: Yup.string().required("فیلد عنوان الزامی است."),
       describe: Yup.string().required("فیلد توضیحات الزامی است."),
-      mainDescribe: Yup.string()
-        .required("فیلد توضیحات الزامی است.")
-        .min(30, "توضیحات باید حداقل 30 کاراکتر باشد."),
+      mainDescribe: Yup.string(),
+      // .required("فیلد توضیحات الزامی است.")
+      // .min(30, "توضیحات باید حداقل 30 کاراکتر باشد."),
       isMain: Yup.string().required("فیلد نوع الزامی است."),
     }),
 
@@ -72,6 +87,10 @@ function EditModal({ isOpen, onOpenChange, task }) {
       });
     },
   });
+
+  useEffect(() => {
+    formik.setFieldValue("mainDescribe", transcript);
+  }, [transcript]);
 
   return (
     <Modal
@@ -231,11 +250,43 @@ function EditModal({ isOpen, onOpenChange, task }) {
                 onBlur={formik.handleBlur}
                 className="text-white rounded-lg p-2"
               />
-              {formik.touched.mainDescribe && formik.errors.mainDescribe && (
-                <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.mainDescribe}
-                </div>
-              )}
+              <div className="text-white flex">
+                <Button
+                  color="success"
+                  variant="bordered"
+                  type="button" // اضافه کردن این نوع
+                  onClick={(e) => {
+                    e.preventDefault(); // جلوگیری از رفتار پیش‌فرض
+                    startListening();
+                  }}
+                >
+                  Start
+                </Button>
+                <Button
+                  color="warning"
+                  variant="bordered"
+                  className="mx-4"
+                  type="button" // اضافه کردن این نوع
+                  onClick={(e) => {
+                    e.preventDefault(); // جلوگیری از رفتار پیش‌فرض
+                    SpeechRecognition.stopListening();
+                  }}
+                >
+                  Stop
+                </Button>
+                <Button
+                  color="default"
+                  variant="bordered"
+                  onClick={(e) => {
+                    e.preventDefault(); // جلوگیری از رفتار پیش‌فرض
+                    resetTranscript();
+                  }}
+                >
+                  Reset
+                </Button>
+
+                <p>میکروفون: {listening ? "روشن" : "خاموش"}</p>
+              </div>
             </ModalBody>
             <ModalFooter>
               <Button color="danger" variant="flat" onPress={onClose}>

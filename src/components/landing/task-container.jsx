@@ -56,7 +56,7 @@ function TaskContainer({ direction, className }) {
                 rotate: `${(index / 2 + 1) * -30}deg`,
                 translate: "-113px",
               }}
-              className="absolute left-[100px] -top-[56px] z-40 cursor-pointer"
+              className="absolute left-[100px] -top-[56px] z-50 cursor-pointer"
               initial={{ width: 0 }}
               whileInView={{ width: "250px" }}
               transition={{ delay: Math.random() }}
@@ -90,7 +90,7 @@ function TaskContainer({ direction, className }) {
               onClick={() => {
                 OpenDetailHandler(item);
               }}
-              className="absolute left-[100px] -top-[56px] z-40 cursor-pointer"
+              className="absolute left-[100px] -top-[56px] z-50 cursor-pointer"
               initial={{ width: 0 }}
               whileInView={{ width: "250px" }}
               transition={{ delay: Math.random() }}
