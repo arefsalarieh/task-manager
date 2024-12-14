@@ -17,12 +17,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import spellCheckText from "../core/utils/spellCheckService"; // ایمپورت سرویس اسپل‌چک
+
 
 const AddCard = ({ isOpen, onOpenChange }) => {
   /* const { isOpen, onOpen, onOpenChange } = useDisclosure(); */
   const addCard2 = useCreateTask();
   const QueryClient = useQueryClient();
+  const [spellCheckResult, setSpellCheckResult] = useState(null); // ذخیره نتیجه اسپل‌چک
+
 
   const {
     transcript,
@@ -33,6 +37,11 @@ const AddCard = ({ isOpen, onOpenChange }) => {
 
   const startListening = () => {
     SpeechRecognition.startListening({ continuous: true, language: "fa-IR" });
+  };
+
+  const handleSpellCheck = async () => {
+    const result = await spellCheckText(formik.values.describe); // فراخوانی اسپل‌چک
+    setSpellCheckResult(result);
   };
 
 
@@ -72,7 +81,11 @@ const AddCard = ({ isOpen, onOpenChange }) => {
     formik.setFieldValue("mainDescribe", transcript);
   }, [transcript]);
 
-
+  useEffect(() => {
+    if (!isOpen) {
+      setSpellCheckResult(null);
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -182,19 +195,66 @@ const AddCard = ({ isOpen, onOpenChange }) => {
                   </div>
                 )}
 
-                <Input
-                  name="describe"
-                  // label="توضیحات"
-                  placeholder="توضیحات را وارد کنید"
-                  value={formik.values.describe}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  variant="bordered"
-                  className="text-white"
-                />
-                {formik.touched.describe && formik.errors.describe && (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.describe}
+                {/* توضیحات */}
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="describe" className="text-sm font-medium">
+                    توضیحات
+                  </label>
+                  <Input
+                    name="describe"
+                    placeholder="توضیحات را وارد کنید"
+                    value={formik.values.describe}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    variant="bordered"
+                    className="text-white"
+                  />
+                  {formik.touched.describe && formik.errors.describe && (
+                    <div className="text-red-500 text-sm mt-1">
+                      {formik.errors.describe}
+                    </div>
+                  )}
+                  <Button
+                    onPress={handleSpellCheck}
+                    color="primary"
+                    className="mt-2">
+                    بررسی متن
+                  </Button>
+                </div>
+
+                {/* نمایش نتیجه بررسی */}
+                {spellCheckResult && (
+                  <div className="my-4 text-sm flex justify-between items-center">
+                    {spellCheckResult.success ? (
+                      <>
+                        <div className="text-green-500">
+                          خروجی اصلاح شده: {spellCheckResult.output}
+                        </div>
+                        <Button
+                          onPress={() =>
+                            formik.setFieldValue(
+                              "describe",
+                              spellCheckResult.output
+                            )
+                          }
+                          color="success"
+                          className="mt-2">
+                          جایگزینی متن
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-red-500">
+                          خطا در بررسی متن: {spellCheckResult.error}
+                        </div>
+                        <Button
+                          onPress={() => spellCheckText(formik.values.describe)}
+                          color="warning"
+                          className="mt-2 text-white">
+                          تلاش مجدد
+                        </Button>
+                      </>
+                    )}
                   </div>
                 )}
 

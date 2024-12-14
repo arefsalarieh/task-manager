@@ -14,6 +14,8 @@ import rolesData from "../../core/constants/role.json";
 import { useEffect, useState } from "react";
 import { useUpdateTasks } from "../../core/services/api/UpdateTask";
 import { useQueryClient } from "@tanstack/react-query";
+import spellCheckText from "../../core/utils/spellCheckService"; // ایمپورت سرویس اسپل‌چک
+
 
 function EditModal({ isOpen, onOpenChange, task }) {
   const updateTask = useUpdateTasks();
@@ -28,6 +30,8 @@ function EditModal({ isOpen, onOpenChange, task }) {
     mainDescribe: "",
     createDate: new Date(),
   });
+  const [spellCheckResult, setSpellCheckResult] = useState(null);
+
   useEffect(() => {
     if (task) {
       setInitialValues({
@@ -42,6 +46,11 @@ function EditModal({ isOpen, onOpenChange, task }) {
       });
     }
   }, [task]);
+
+  const handleSpellCheck = async () => {
+    const result = await spellCheckText(formik.values.describe);
+    setSpellCheckResult(result);
+  };
 
   const formik = useFormik({
     initialValues,
@@ -202,8 +211,9 @@ function EditModal({ isOpen, onOpenChange, task }) {
                 )}
               </div>
 
+              {/* توضیحات */}
               <div className="flex flex-col gap-2">
-                <label htmlFor="describe" className="text-sm font-medium">
+              <label htmlFor="describe" className="text-sm font-medium">
                   توضیحات
                 </label>
                 <Input
@@ -221,7 +231,50 @@ function EditModal({ isOpen, onOpenChange, task }) {
                     {formik.errors.describe}
                   </div>
                 )}
+                <Button
+                  onPress={handleSpellCheck}
+                  color="primary"
+                  className="mt-2"
+                >
+                  بررسی متن
+                </Button>
               </div>
+
+              {/* نمایش نتیجه بررسی */}
+              {spellCheckResult && (
+                <div className="my-4 text-sm flex justify-between items-center">
+                  {spellCheckResult.success ? (
+                    <>
+                      <div className="text-green-500">
+                        خروجی اصلاح شده: {spellCheckResult.output}
+                      </div>
+                      <Button
+                        onPress={() =>
+                          formik.setFieldValue(
+                            "describe",
+                            spellCheckResult.output
+                          )
+                        }
+                        color="success"
+                        className="mt-2">
+                        جایگزینی متن
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-red-500">
+                        خطا در بررسی متن: {spellCheckResult.error}
+                      </div>
+                      <Button
+                        onPress={() => spellCheckText(formik.values.describe)}
+                        color="warning"
+                        className="mt-2 text-white">
+                        تلاش مجدد
+                      </Button>
+                    </>
+                  )}
+                </div>
+              )}
 
               <textarea
                 name="mainDescribe"
