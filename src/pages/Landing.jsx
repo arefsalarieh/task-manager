@@ -1,5 +1,5 @@
 import BackCircle from "../components/landing/backCircle";
-import FrontCircle from "../components/landing/FrontCircle";
+import FrontCircle from "../components/landing/frontCircle";
 import BackImage from "../components/landing/back-image";
 import TaskContainer from "../components/landing/task-container";
 
