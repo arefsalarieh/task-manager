@@ -20,19 +20,16 @@ import EditModal from "./EditModal";
 import { useDeleteTasks, useTasks } from "./hooks/useTasks";
 import { useQueryClient } from "@tanstack/react-query";
 import { columns } from "./data";
-import TaskDetail from "./taskDetail";
+import TaskDetail from "./TaskDetail";
 
 function Content() {
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
   const [detail, setDetail] = useState({});
   const [selectedTask, setSelectedTask] = useState(null);
- 
+
   // modals
-  const {
-    isOpen: isOpenDelete,
-    onOpen: onOpenDelete,
-    onOpenChange: onOpenChangeDelete,
-  } = useDisclosure();
+  const { isOpen: isOpenDelete, onOpenChange: onOpenChangeDelete } =
+    useDisclosure();
   const {
     isOpen: isOpenAdd,
     onOpen: onOpenAdd,
